@@ -39,7 +39,7 @@ $(document).ready(function (data) {
         fields: {
             id: {
                 title: 'Author Id',
-                width: '30%',
+                width: '10%',
                 key: true,
                 list: true,
                 edit: false,
