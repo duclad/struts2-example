@@ -16,7 +16,7 @@ public class AuthorDaoHibernateImpl implements AuthorDao {
 
     private SessionFactory sessionFactory;
 
-    public Author get(String id) {
+    public Author get(Long id) {
 
         return (Author) sessionFactory.getCurrentSession().get(Author.class, id);
     }
@@ -30,12 +30,20 @@ public class AuthorDaoHibernateImpl implements AuthorDao {
 
     }
 
-    public void store(Author author) {
-        sessionFactory.getCurrentSession().saveOrUpdate(author);
+    public void create(Author author) {
+        sessionFactory.getCurrentSession().save(author);
+    }
+
+    public void update(Author author) {
+        sessionFactory.getCurrentSession().update(author);
     }
 
     public Long count() {
         return (Long) sessionFactory.getCurrentSession().createCriteria(Author.class).setProjection(Projections.rowCount()).uniqueResult();
+    }
+
+    public void delete(Long id) {
+        sessionFactory.getCurrentSession().delete(get(id));
     }
 
     public void setSessionFactory(SessionFactory sessionFactory) {

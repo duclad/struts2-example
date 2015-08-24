@@ -1,18 +1,27 @@
 package ro.duclad.examples.struts2.actions.author;
 
 import com.opensymphony.xwork2.Action;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import ro.duclad.examples.struts2.actions.ActionResult;
 import ro.duclad.examples.struts2.model.Author;
 import ro.duclad.examples.struts2.services.AuthorServices;
 
 import java.io.File;
-import java.util.Calendar;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.List;
 
 /**
  * Created by duclad on 8/23/15.
  */
-public class AuthorsActions {
+public class CrudActions {
 
     private AuthorServices authorServices;
     // Holds Start Page Index
@@ -26,14 +35,15 @@ public class AuthorsActions {
     private Author record;
     private String result;
     private String message;
-    private String id;
+    private Long id;
     private String name;
     private String biography;
     private String miniBio;
     private String imgSrc;
     private String language;
-    private Calendar joinedOn;
-    private File image;
+    private String joinedOn;
+    private String imageFolder;
+
 
     public Author getRecord() {
         return record;
@@ -67,20 +77,12 @@ public class AuthorsActions {
         this.biography = biography;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public File getImage() {
-        return image;
-    }
-
-    public void setImage(File image) {
-        this.image = image;
     }
 
     public String getImgSrc() {
@@ -91,11 +93,11 @@ public class AuthorsActions {
         this.imgSrc = imgSrc;
     }
 
-    public Calendar getJoinedOn() {
+    public String getJoinedOn() {
         return joinedOn;
     }
 
-    public void setJoinedOn(Calendar joinedOn) {
+    public void setJoinedOn(String joinedOn) {
         this.joinedOn = joinedOn;
     }
 
@@ -186,19 +188,83 @@ public class AuthorsActions {
     }
 
     public String create() {
-        Author author = new Author();
-        author.setBiography(biography);
-        author.setJoinedOn(joinedOn);
-        author.setLanguage(language);
-        author.setMiniBio(miniBio);
-        author.setName(name);
+        record = new Author();
+        record.setBiography(biography);
+        record.setJoinedOn(DateTime.parse(joinedOn, DateTimeFormat.forPattern("yyyy-MM-dd")).toDate());
+        record.setLanguage(language);
+        record.setMiniBio(miniBio);
+        record.setName(name);
         try {
-            authorServices.create(author);
-            result = ActionResult.OK.toString();
+            String newFileName = commitFileUpload();
+            record.setImgSrc(newFileName);
+            if (StringUtils.isBlank(record.getImgSrc())) {
+                result = ActionResult.ERROR.toString();
+                message = "An image is required";
+            } else {
+                authorServices.create(record);
+                result = ActionResult.OK.toString();
+            }
         } catch (Exception e) {
             result = ActionResult.ERROR.toString();
             message = e.getMessage();
         }
         return Action.SUCCESS;
+    }
+
+    public String update() {
+        record = authorServices.get(id);
+        record.setBiography(biography);
+        record.setJoinedOn(DateTime.parse(joinedOn, DateTimeFormat.forPattern("yyyy-MM-dd")).toDate());
+        record.setLanguage(language);
+        record.setMiniBio(miniBio);
+        record.setName(name);
+        try {
+            String newFileName = commitFileUpload();
+            if (StringUtils.isNotBlank(newFileName)) {
+                FileUtils.forceDelete(new File(imageFolder+File.separator+record.getImgSrc()));
+                record.setImgSrc(newFileName);
+            }
+            if (StringUtils.isBlank(record.getImgSrc())) {
+                result = ActionResult.ERROR.toString();
+                message = "An image is required";
+            } else {
+                authorServices.update(record);
+                result = ActionResult.OK.toString();
+            }
+        } catch (Exception e) {
+            result = ActionResult.ERROR.toString();
+            message = e.getMessage();
+        }
+        return Action.SUCCESS;
+    }
+
+    private String commitFileUpload() throws IOException {
+        String tmpFileName = ServletActionContext.getRequest().getSession().getId();
+        List files = (List) FileUtils.listFiles(new File(imageFolder), new WildcardFileFilter("*" + tmpFileName + "*"), TrueFileFilter.TRUE);
+        String newFileName = "";
+        if (files.size() > 0) {
+            String uniqueName = new BigInteger(128, new SecureRandom()).toString(32);
+            File tmpImage = (File) files.get(0);
+            newFileName = StringUtils.replace(tmpImage.getName(), tmpFileName, uniqueName);
+            FileUtils.moveFile(tmpImage, new File(imageFolder + File.separator + newFileName));
+        }
+        return newFileName;
+    }
+
+    public String delete() {
+        try {
+            if (id != null) {
+                authorServices.delete(id);
+                result = ActionResult.OK.toString();
+            }
+        } catch (Exception e) {
+            result = ActionResult.ERROR.toString();
+            message = e.getMessage();
+        }
+        return Action.SUCCESS;
+    }
+
+    public void setImageFolder(String imageFolder) {
+        this.imageFolder = imageFolder;
     }
 }

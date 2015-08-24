@@ -14,4 +14,10 @@ public interface AuthorServices {
     List<Author> getAll(int startFrom, int pageSize);
 
     void create(Author author);
+
+    void update(Author author);
+
+    void delete(Long id);
+
+    Author get(Long id);
 }

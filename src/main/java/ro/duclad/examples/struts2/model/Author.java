@@ -1,20 +1,29 @@
 package ro.duclad.examples.struts2.model;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by duclad on 8/23/15.
  */
-public class Author implements Serializable{
+public class Author implements Serializable {
 
-    private String id;
+    private Long id;
     private String name;
     private String biography;
     private String miniBio;
     private String imgSrc;
     private String language;
-    private Calendar joinedOn;
+    private Date joinedOn;
+    private long version;
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
+    }
 
 
     public String getBiography() {
@@ -25,11 +34,11 @@ public class Author implements Serializable{
         this.biography = biography;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -41,11 +50,11 @@ public class Author implements Serializable{
         this.imgSrc = imgSrc;
     }
 
-    public Calendar getJoinedOn() {
+    public Date getJoinedOn() {
         return joinedOn;
     }
 
-    public void setJoinedOn(Calendar joinedOn) {
+    public void setJoinedOn(Date joinedOn) {
         this.joinedOn = joinedOn;
     }
 

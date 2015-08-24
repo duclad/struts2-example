@@ -2,11 +2,12 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="ro.duclad.examples.struts2.model">
-    <class name="Author" table="AUTHOR" mutable="false">
+    <class name="Author" table="AUTHOR">
         <id name="id" type="java.lang.Long">
             <column name="ID"/>
             <generator class="identity"/>
         </id>
+        <version name="version" type="long" />
         <property name="name" type="string" column="AUTHOR_NAME" unique="true" not-null="true" index="IDX_CONTENT_AUTHOR_NAME"/>
         <property name="biography" column="BIOGRAPHY" type="string" not-null="true"/>
         <property name="miniBio" column="MINI_BIOGRAPHY" type="string"/>

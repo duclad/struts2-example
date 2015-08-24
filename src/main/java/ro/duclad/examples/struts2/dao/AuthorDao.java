@@ -14,7 +14,7 @@ public interface AuthorDao {
      * @param id - Unique ID of an author
      * @return The author found by its unique ID or null if nothing found.
      */
-    Author get(String id);
+    Author get(Long id);
 
     /**
      * Finds all authors from the database
@@ -31,14 +31,27 @@ public interface AuthorDao {
     List<Author> getAll(int startFrom, int pageSize);
 
     /**
-     * Will store an author informations in the database. This could yield and update if the author is already present or an insert if the author does not exists.
+     * Will create an author informations in the database.
      * @param author Author information to be saved in database.
      */
-    void store(Author author);
+    void create(Author author);
+
+    /**
+     * Will update an author informations in the database.
+     *
+     * @param author Author information to be saved in database.
+     */
+    void update(Author author);
 
     /**
      * Count all authors from the database
      * @return The number of authors in the database.
      */
     Long count();
+
+    /**
+     * Deletes a recod from database
+     * @param id
+     */
+    void delete(Long id);
 }

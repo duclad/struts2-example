@@ -7,6 +7,16 @@
         <action name="*Action" class="authorsActions" method="{1}">
             <result type="json">/pages/authors.jsp</result>
         </action>
+        <action name="uploadImage" class="imageAction" method="upload">
+            <result type="json">
+                <param name="root">imageData</param>
+            </result>
+        </action>
+        <action name="downloadImage" class="imageAction" method="download">
+            <result type="json">
+                <param name="root">imageData</param>
+            </result>
+        </action>
         <action name="getJSONResult" class="authorsActions" method="list">
             <result type="json" />
         </action>

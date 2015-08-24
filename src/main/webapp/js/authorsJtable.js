@@ -1,16 +1,15 @@
-$(document).ready(function() {
+$(document).ready(function (data) {
 
-
-});
-
-
-$(document).ready(function () {
-    $('.upload').live('change', function()          {
-        var id=this.id;
-        $("#preview"+id).html('');
-        $("#preview"+id).html('<img src="img/loader.gif" alt="Uploading...."/>');
-        $("#form"+id).ajaxForm({
-            target: '#preview'+id
+    $('.upload').live('change', function () {
+        $("#previewImage").html('');
+        $("#previewImage").html('<img src="/img/loader.gif" alt="Uploading...."/>');
+        $("#imageUploadForm").ajaxForm({
+            target: '#previewImage',
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (data) {
+                $('#previewImage').html('<img src="data:image/png;base64,' + data + '" />')
+            }
         }).submit();
 
     });
@@ -23,7 +22,20 @@ $(document).ready(function () {
             updateAction: 'updateAction',
             deleteAction: 'deleteAction'
         },
-
+        formCreated: function (event, data) {
+            if (data.formType == 'edit') {
+                $.ajax({
+                    url: "downloadImage",
+                    target: '#previewImage',
+                    data: {id: data.record.id},
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#previewImage').html('<img src="data:image/png;base64,' + data + '" />')
+                    }
+                });
+            }
+        },
         fields: {
             id: {
                 title: 'Author Id',
@@ -36,40 +48,48 @@ $(document).ready(function () {
             name: {
                 title: 'Name',
                 width: '30%',
-                edit: true
+                edit: true,
+                create: true
             },
             miniBio: {
                 title: 'Mini Biography',
                 width: '30%',
                 type: 'textarea',
-                edit: true
+                edit: true,
+                create: true
             },
             biography: {
                 title: 'Biography',
                 width: '30%',
                 type: 'textarea',
                 edit: true,
+                create: true,
                 list: false
             },
             language: {
                 title: 'Language',
                 width: '20%',
                 options: {'en': 'English', 'zh': 'Chinese', 'ja': 'Japanese', 'pt': 'Portuguese', 'fr': 'French'},
-                edit: true
+                edit: true,
+                create: true,
+                list: true
             },
             joinedOn: {
                 title: 'Joined On',
                 width: '30%',
                 type: 'date',
-                edit: true
+                edit: true,
+                create: true,
+                list: true
             },
             imgSrc: {
                 title: 'Image',
                 width: '30%',
                 edit: true,
+                create: true,
                 list: false,
                 input: function (data) {
-                    return '<div id=' + data.record.PersonId + '><form id="form' + data.record.PersonId + '" method="post" enctype="multipart/form-data" action="ajaximage.php"><input type="file" name="photoimg" id="' + data.record.PersonId + '" class="upload"/><input type="hidden"  value="' + data.record.PersonId + '"/></form></div><div id="preview' + data.record.PersonId + '"></div>';
+                    return '<div id="imageUpload"><form id="imageUploadForm" method="post" enctype="multipart/form-data" action="uploadImage"><input type="file" name="image" id="image" class="upload"/><input type="hidden"  value="image"/></form></div><div id="previewImage"></div>';
                 }
             }
         }

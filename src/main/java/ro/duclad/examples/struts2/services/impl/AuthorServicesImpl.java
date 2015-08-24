@@ -13,14 +13,13 @@ import java.util.List;
 @Transactional
 public class AuthorServicesImpl implements AuthorServices {
 
+    AuthorDao authorDao;
+
     public void setAuthorDao(AuthorDao authorDao) {
         this.authorDao = authorDao;
     }
 
-    AuthorDao authorDao;
-
-
-    public List<Author> getAll(){
+    public List<Author> getAll() {
         return authorDao.getAll();
     }
 
@@ -29,8 +28,19 @@ public class AuthorServicesImpl implements AuthorServices {
     }
 
     public void create(Author author) {
-        authorDao.store(author);
+        authorDao.create(author);
     }
 
+    public void update(Author author) {
+        authorDao.update(author);
+    }
+
+    public void delete(Long id) {
+        authorDao.delete(id);
+    }
+
+    public Author get(Long id) {
+        return authorDao.get(id);
+    }
 
 }
