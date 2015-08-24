@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="authors" extends="json-default">
+        <action name="*Action" class="authorsActions" method="{1}">
+            <result type="json">/pages/authors.jsp</result>
+        </action>
+        <action name="getJSONResult" class="authorsActions" method="list">
+            <result type="json" />
+        </action>
+    </package>
+</struts>
