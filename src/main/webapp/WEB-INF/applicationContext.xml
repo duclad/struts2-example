@@ -64,4 +64,13 @@
         <property name="authorServices" ref="authorServices"/>
         <property name="imageFolder" value="${image.folder}"/>
     </bean>
+
+
+    <!-- Flyway configuration -->
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <property name="baselineOnMigrate" value="true" />
+        <property name="locations" value="classpath:/db/migration/" />
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
 </beans>
