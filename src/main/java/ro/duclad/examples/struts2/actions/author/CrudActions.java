@@ -168,6 +168,7 @@ public class CrudActions {
     public String list() {
         try {
             records = authorServices.getAll();
+            totalRecordCount = authorServices.countAll();
             result = ActionResult.OK.toString();
         } catch (Exception e) {
             result = ActionResult.ERROR.toString();
@@ -179,6 +180,7 @@ public class CrudActions {
     public String page() {
         try {
             records = authorServices.getAll(jtStartIndex, jtPageSize);
+            totalRecordCount = authorServices.countAll();
             result = ActionResult.OK.toString();
         } catch (Exception e) {
             result = ActionResult.ERROR.toString();
@@ -221,7 +223,7 @@ public class CrudActions {
         try {
             String newFileName = commitFileUpload();
             if (StringUtils.isNotBlank(newFileName)) {
-                FileUtils.forceDelete(new File(imageFolder+File.separator+record.getImgSrc()));
+                FileUtils.forceDelete(new File(imageFolder + File.separator + record.getImgSrc()));
                 record.setImgSrc(newFileName);
             }
             if (StringUtils.isBlank(record.getImgSrc())) {

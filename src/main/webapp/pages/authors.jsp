@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>jTable in Struts 2</title>
     <!-- jTable metro styles. -->
     <link href="../css/metro/blue/jtable.css" rel="stylesheet" type="text/css"/>

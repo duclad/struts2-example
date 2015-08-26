@@ -16,6 +16,8 @@ $(document).ready(function (data) {
 
     $('#AuthorsTableContainer').jtable({
         title: 'Authors List',
+        paging: true, //Enable paging
+        pageSize: 3, //Set page size (default: 10)
         actions: {
             listAction: 'pageAction',
             createAction: 'createAction',

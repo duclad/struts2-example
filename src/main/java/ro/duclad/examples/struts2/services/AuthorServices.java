@@ -20,4 +20,6 @@ public interface AuthorServices {
     void delete(Long id);
 
     Author get(Long id);
+
+    long countAll();
 }

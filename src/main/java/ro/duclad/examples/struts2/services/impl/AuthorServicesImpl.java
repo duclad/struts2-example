@@ -43,4 +43,8 @@ public class AuthorServicesImpl implements AuthorServices {
         return authorDao.get(id);
     }
 
+    public long countAll() {
+        return authorDao.count();
+    }
+
 }
